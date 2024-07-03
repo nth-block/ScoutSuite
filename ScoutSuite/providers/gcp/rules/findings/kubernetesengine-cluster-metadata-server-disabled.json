@@ -1,6 +1,6 @@
 {
     "description": "GKE Metadata Server Disabled",
-    "rationale": "Every GKE node stores its metadata on a metadata server. Some of this metadata, such as kubelet credentials and the VM instance identity token, is sensitive and should not be exposed to a Kubernetes workload.<br>Enabling the GKE Metadata server prevents pods (that are not running on the host network) from accessing this metadata and facilitates Workload Identity.<br>When unspecified, the default setting allows running pods to have full access to the node's underlying metadata server.",
+    "rationale": "Every GKE node stores its metadata on a metadata server. Some of this metadata, such as kubelet credentials and the VM instance identity token, is sensitive and should not be exposed to Kubernetes workloads.<br>Enabling the GKE Metadata server prevents pods (that are not running on the host network) from accessing this metadata and facilitates Workload Identity.<br>When unspecified, the default setting allows running pods to have full access to the node's underlying metadata server.",
     "compliance": [
         {
             "name": "CIS GKE Benchmark",
@@ -10,7 +10,8 @@
     ],
     "references": [
         "https://www.cisecurity.org/benchmark/kubernetes/",
-        "https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#concealment"
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#concealment",
+        "https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/NodeConfig#WorkloadMetadataConfig"
     ],
     "dashboard_name": "Clusters",
     "path": "kubernetesengine.projects.id.clusters.id",
@@ -18,9 +19,13 @@
         "and",
         [
             "metadata_server_enabled",
-            "false",
-            ""
+            "containNoneOf",
+            [
+                "GKE_METADATA",
+                "GKE_METADATA_SERVER",
+                "SECURE"
+            ]
         ]
     ],
-    "id_suffix": "metadata_server_enabled"
+    "id_suffix": "workload_metadata_mode"
 }
