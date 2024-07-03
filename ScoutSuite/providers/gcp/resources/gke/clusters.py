@@ -44,7 +44,7 @@ class Clusters(Resources):
         cluster_dict['master_authorized_networks_config'] = self._get_master_authorized_networks_config(raw_cluster)
         cluster_dict['application_layer_encryption_enabled'] = raw_cluster.get('databaseEncryption', {}).get('state', None) == 'ENCRYPTED'
         cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get('workloadPool', '').endswith('.svc.id.goog')
-        cluster_dict['metadata_server_enabled'] = self._metadata_server_enabled(raw_cluster.get('nodePools', []))
+        cluster_dict['workload_metadata_mode'],  cluster_dict['workload_metadata_node_metadata'] = self._get_workload_metadata_config(raw_cluster.get('nodePools', []))
         cluster_dict['release_channel'] = raw_cluster.get('releaseChannel', {}).get('channel', None)
         cluster_dict['shielded_nodes_enabled'] = raw_cluster.get('shieldedNodes', {}).get('enabled', False)
         cluster_dict['binary_authorization'] = raw_cluster.get('binaryAuthorization', {}).get('evaluationMode', 'EVALUATION_MODE_UNSPECIFIED')
@@ -56,11 +56,14 @@ class Clusters(Resources):
 
         return cluster_dict['id'], cluster_dict
 
-    def _metadata_server_enabled(self, node_pools):
+    def _get_workload_metadata_config(self, node_pools):
+        mode = set()
+        node_metadata = set()
         for pool in node_pools:
-            if pool.get('config', {}).get('workloadMetadataConfig', {}) == {}:
-                return False
-        return True
+            workload_metadata_config = pool.get('config', {}).get('workloadMetadataConfig', {})
+            mode.add(workload_metadata_config.get('mode', 'MODE_UNSPECIFIED'))
+            node_metadata.add(workload_metadata_config.get('nodeMetadata', 'UNSPECIFIED'))
+        return list(mode), list(node_metadata)
 
     def _get_master_authorized_networks_config(self, raw_cluster):
         if raw_cluster.get('masterAuthorizedNetworksConfig'):

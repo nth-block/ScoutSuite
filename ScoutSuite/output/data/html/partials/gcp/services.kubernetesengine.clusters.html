@@ -69,8 +69,9 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Node pools</h4>
+        <div class="list-group-item-text item-margin">Workload Metadata Mode: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.workload_metadata_mode" class="kubernetesengine.projects.{{@../key}}.nodes.{{@key}}.workload_metadata_mode">{{workload_metadata_mode}}</span></div>
+        <div class="list-group-item-text item-margin">Workload Metadata Node Metadata: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.workload_metadata_node_metadata" class="kubernetesengine.projects.{{@../key}}.nodes.{{@key}}.workload_metadata_node_metadata">{{workload_metadata_node_metadata}}</span></div>
         <div class="list-group-item-text item-margin">Private Nodes: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_nodes_enabled" class="kubernetesengine.projects.{{@../key}}.nodes.{{@key}}.accessible_cluster">{{convert_bool_to_enabled private_nodes_enabled}}</span></div>
-        <div class="list-group-item-text item-margin">Metadata Server: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.metadata_server_enabled" class="kubernetesengine.projects.{{@../key}}.nodes.{{@key}}.accessible_cluster">{{convert_bool_to_enabled metadata_server_enabled}}</span></div>
         <div class="list-group-item-text item-margin">
             {{#each node_pools}}
             <samp>{{@key}}</samp>
