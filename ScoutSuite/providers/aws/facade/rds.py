@@ -132,7 +132,10 @@ class RDSFacade(AWSBaseFacade):
             snapshot['Attributes'] =\
                 attributes['DBClusterSnapshotAttributes'] if 'DBClusterSnapshotAttributes' in attributes else {}
         except Exception as e:
-            print_exception(f'Failed to describe RDS cluster snapshot attributes: {e}')
+            if 'DBClusterSnapshotNotFoundFault' in str(e):
+                print_warning(f'Failed to describe RDS cluster snapshot attributes: {e}')
+            else:
+                print_exception(f'Failed to describe RDS cluster snapshot attributes: {e}')
 
     async def get_subnet_groups(self, region: str, vpc: str):
         try:
