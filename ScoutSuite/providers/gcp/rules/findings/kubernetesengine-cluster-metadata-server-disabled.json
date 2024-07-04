@@ -18,7 +18,7 @@
     "conditions": [
         "and",
         [
-            "metadata_server_enabled",
+            "workload_metadata_mode",
             "containNoneOf",
             [
                 "GKE_METADATA",
